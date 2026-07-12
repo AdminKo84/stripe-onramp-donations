@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     const monto = Number(amount) || 25; // USD por defecto
 
     const params = new URLSearchParams();
-    params.append('wallet_addresses[ethereum]', process.env.0x88bE10b4f8ab772e90DABc898cBd03dB27215411);
+    params.append('wallet_addresses[ethereum]', process.env. 0x88bE10b4f8ab772e90DABc898cBd03dB27215411);
     params.append('destination_networks[]', 'base');
     params.append('destination_currencies[]', 'usdc');
     params.append('destination_currency', 'usdc');
