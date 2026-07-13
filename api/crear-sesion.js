@@ -13,8 +13,6 @@ export default async function handler(req, res) {
 
     const params = new URLSearchParams();
 
-    // Wallet de destino en la red Base
-    params.append('wallet_addresses[base]', '0xbA6D65c7e2896b7e2e227869f853a4E79b1AF57A');
 
     // Redes/monedas soportadas para el destino
     params.append('destination_networks[]', 'base');
