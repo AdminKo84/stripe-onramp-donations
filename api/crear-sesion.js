@@ -1,6 +1,15 @@
 export default async function handler(req, res) {
-  // CORS para que tu web WordPress pueda llamarlo
-  res.setHeader('Access-Control-Allow-Origin', 'https://kotaingtoe.org');
+  // CORS dinámico para permitir ambos dominios
+  const allowedOrigins = [
+    'https://kotaingtoe.org',
+    'https://www.kotaingtoe.org'
+  ];
+
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -9,10 +18,9 @@ export default async function handler(req, res) {
 
   try {
     const { amount } = req.body || {};
-    const monto = Number(amount) || 25; // USD por defecto
+    const monto = Number(amount) || 25;
 
     const params = new URLSearchParams();
-
 
     // Redes/monedas soportadas para el destino
     params.append('destination_networks[]', 'base');
@@ -30,13 +38,18 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: params,
+      body: params.toString(), // ← IMPORTANTE
     });
 
     const data = await r.json();
-    if (!r.ok) return res.status(400).json({ error: data.error?.message || 'Stripe error' });
+    if (!r.ok) {
+      return res.status(400).json({
+        error: data.error?.message || 'Stripe error'
+      });
+    }
 
     return res.status(200).json({ client_secret: data.client_secret });
+
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
