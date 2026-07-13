@@ -3,6 +3,7 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', 'https://kotaingtoe.org');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
@@ -11,9 +12,15 @@ export default async function handler(req, res) {
     const monto = Number(amount) || 25; // USD por defecto
 
     const params = new URLSearchParams();
-    params.append('wallet_addresses[ethereum]', process.env. 0x88bE10b4f8ab772e90DABc898cBd03dB27215411);
+
+    // Wallet de destino en la red Base
+    params.append('wallet_addresses[base]', '0xbA6D65c7e2896b7e2e227869f853a4E79b1AF57A');
+
+    // Redes/monedas soportadas para el destino
     params.append('destination_networks[]', 'base');
     params.append('destination_currencies[]', 'usdc');
+
+    // Destino por defecto y origen
     params.append('destination_currency', 'usdc');
     params.append('destination_network', 'base');
     params.append('source_currency', 'usd');
